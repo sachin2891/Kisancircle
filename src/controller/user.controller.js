@@ -1,4 +1,5 @@
-const { registerUser, userLogin, userProfile, userProfilePassUpdate, userProfilePUpdate, userLogout, OtpGenarationtoUpdatePass } = require('../services/user.services');
+const { registerUser, userLogin, userProfile, userProfilePassUpdate,
+    userProfilePUpdate, userLogout, OtpGenarationtoUpdatePass } = require('../services/user.services');
 
 const registerController = async (req, res) => {
     try {
@@ -97,7 +98,7 @@ const profilePassUpdateController = async (req, res) => {
 }
 const profileUpdateController = async (req, res) => {
     try {
-        console.log("user under controller");
+
 
         const result = await userProfilePUpdate(req);
 
@@ -111,6 +112,7 @@ const profileUpdateController = async (req, res) => {
 
     }
 }
+
 
 
 module.exports = {

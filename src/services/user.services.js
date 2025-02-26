@@ -80,13 +80,10 @@ const userLogout = async (req) => {
 
 const userProfile = async (req) => {
     try {
-        // if (!req.email) {
-        //     return { success: false, message: "Email is required" };
-        // }
-        // const user = await User.findOne({ email: req.email });
-        // if (!user) {
-        //     return { success: false, message: "User not found" };
-        // }
+
+        const user = await User.findOne({ email: req.user.email });
+
+        req.user = user;
         return { success: true, user: req.user };
     }
     catch (error) {
@@ -105,25 +102,24 @@ const OtpGenarationtoUpdatePass = async (req, res) => {
 const userProfilePassUpdate = async (req) => {
     try {
 
-        // if (!req.email) {
-        //     return { success: false, message: "Email is required" };
-        // }
+
         const user = await User.findOne({ email: req.user.email });
         // console.log(user);
 
         const { otp, newPassword } = req.body;
         const otpdata = await UserOtpVerification.findOne({ email: user.email });
         if (otpdata.expiresAt < Date.now()) {
+            await UserOtpVerification.deleteMany({ email: user.email });
             return { success: false, message: "OTP expired please regenerate otp " };
         }
         const encryptotp = await bcrypt.compare(otp, otpdata.otp);
         if (!encryptotp) {
             return { success: false, message: "Please look into email and enter correct otp" }
-
         }
         const password = await bcrypt.hash(newPassword, parseInt(process.env.SALT));
         user.password = password;
         await user.save();
+        await UserOtpVerification.deleteMany({ email: user.email });
         return { success: true, message: "user password has been changed " };
     } catch (error) {
         console.error("Error updating user profile:", error);
@@ -150,6 +146,8 @@ const userProfilePUpdate = async (req) => {
 
 
 }
+
+
 
 module.exports = {
     registerUser, userLogin, userLogout,

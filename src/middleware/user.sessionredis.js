@@ -5,10 +5,11 @@ const { Session } = require("../models/session.schema");
 const { json } = require("express");
 
 const client = redis.createClient();
+client.connect();
 
 
 const maintain_session_redis = async (req) => {
-    await client.connect();
+
     client.on('error', err => console.log('Redis client error', err));
     try {
 
@@ -21,7 +22,7 @@ const maintain_session_redis = async (req) => {
                 'status': true
             }));
             const session = await client.get(isUser.name);
-            console.log(session);
+            // console.log(session);
         }
         else {
             console.log("User not found");
@@ -34,13 +35,21 @@ const maintain_session_redis = async (req) => {
 
 const validate_session_redis = async (req, res, next) => {
     try {
-        const check_user = await verify_token(req);
+
+
+        const check_user = await verify_token(req.headers.authorization);
+
+
+
         if (check_user) {
-            await client.connect();
+
+
             client.on('error', err => console.log('Redis client error', err));
             const issession = await client.GET(check_user.name);
+            // console.log(issession);
+
             const isSession = JSON.parse(issession);
-            console.log(isSession);
+            // console.log(isSession);
             if (!isSession.status) {
                 const isUser = await Session.findOne({ user_id: check_user.user_id });
                 if (isUser.status) {

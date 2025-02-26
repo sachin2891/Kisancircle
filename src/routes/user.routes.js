@@ -9,7 +9,6 @@ const { registerController,
     OtptoUpdatePassController } = require('../controller/user.controller');
 //const { authorization } = require('../middleware/user.authorization');
 const { validate_session_redis } = require("../middleware/user.sessionredis");
-const { validate } = require('../models/user.schema');
 
 userrouter.route('/').get();
 userrouter.route('/signup').post(registerController);

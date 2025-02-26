@@ -1,4 +1,3 @@
-const { verify_token } = require("../middleware/user.verifytoken");
 const User = require("../models/user.schema");
 const { Session } = require("../models/session.schema");
 const { maintain_session_redis } = require("../middleware/user.sessionredis");

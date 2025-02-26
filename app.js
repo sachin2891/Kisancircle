@@ -9,6 +9,7 @@ app.use(cookieParser());
 const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const { swaggerDefinition } = require("./src/swaggerdocs/swaggerdefinition");
+const { postrouter } = require('./src/routes/user.post.routes');
 const port = process.env.PORT;
 app.use(express.json());
 
@@ -24,6 +25,7 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use('/', homerouter);
 app.use('/', userrouter);
+app.use('/post', postrouter);
 dbConnection().then(() => {
     console.log("data base connection established");
     app.listen(port, () => {
